@@ -103,4 +103,13 @@ public class DiagnosticOrder {
 
     @Column(name = "vanSerialNo")
     private Long vanSerialNo;
+
+    @Column(name = "SyncedDate")
+    private Timestamp syncedDate;
+
+    @Column(name = "Syncedby", length = 50)
+    private String syncedBy;
+
+    @Column(name = "SyncFailureReason")
+    private String syncFailureReason;
 }

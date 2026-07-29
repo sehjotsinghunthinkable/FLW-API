@@ -71,4 +71,25 @@ public class DiagnosticDocument {
 
     @Column(name = "deleted")
     private Boolean deleted = false;
+
+    @Column(name = "vanID")
+    private Integer vanID;
+
+    @Column(name = "parkingPlaceID")
+    private Integer parkingPlaceID;
+
+    @Column(name = "processed")
+    private String processed = "N";
+
+    @Column(name = "vanSerialNo")
+    private Long vanSerialNo;
+
+    @Column(name = "SyncedDate")
+    private Timestamp syncedDate;
+
+    @Column(name = "Syncedby", length = 50)
+    private String syncedBy;
+
+    @Column(name = "SyncFailureReason")
+    private String syncFailureReason;
 }
