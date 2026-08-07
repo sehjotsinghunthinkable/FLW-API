@@ -4,6 +4,7 @@ import com.iemr.flw.domain.iemr.DiagnosticDocument;
 import com.iemr.flw.domain.iemr.DiagnosticOrder;
 import com.iemr.flw.dto.DiagnosticDocumentContent;
 import com.iemr.flw.integration.provider.DiagnosticDocumentAsset;
+import com.iemr.flw.masterEnum.DiagnosticDocumentSyncStatus;
 import com.iemr.flw.masterEnum.DiagnosticDocumentType;
 import com.iemr.flw.repo.iemr.DiagnosticDocumentRepo;
 import com.iemr.flw.repo.iemr.DiagnosticOrderRepo;
@@ -100,6 +101,9 @@ public class DiagnosticDocumentServiceImpl implements DiagnosticDocumentService 
         document.setContentType(asset.getContentType() != null ? asset.getContentType() : DEFAULT_CONTENT_TYPE);
         document.setOriginalFileName(asset.getFileName());
         document.setCreatedBy("SYSTEM");
+        document.setSyncStatus(DiagnosticDocumentSyncStatus.PENDING.name());
+        document.setSyncRetryCount(0);
+        document.setNextAttemptAt(null);
         try {
             diagnosticDocumentRepo.save(document);
             if (isNewDocument) diagnosticDocumentRepo.updateVanSerialNo(document.getId());

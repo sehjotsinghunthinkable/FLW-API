@@ -13,7 +13,8 @@ import java.sql.Timestamp;
         indexes = {
         @Index(name = "idx_diagnostic_document_beneficiary_id", columnList = "beneficiary_id"),
         @Index(name = "idx_diagnostic_document_order_type", columnList = "order_type"),
-        @Index(name = "idx_diagnostic_document_epoch_time", columnList = "epoch_time")
+        @Index(name = "idx_diagnostic_document_epoch_time", columnList = "epoch_time"),
+        @Index(name = "idx_diagnostic_document_sync_status", columnList = "sync_status")
 })
 @Data
 public class DiagnosticDocument {
@@ -54,6 +55,21 @@ public class DiagnosticDocument {
 
     @Column(name = "original_file_name", length = 255)
     private String originalFileName;
+
+    @Column(name = "sync_status", length = 20)
+    private String syncStatus = "PENDING";
+
+    @Column(name = "s3_object_key", length = 500)
+    private String s3ObjectKey;
+
+    @Column(name = "sync_retry_count")
+    private Integer syncRetryCount = 0;
+
+    @Column(name = "next_attempt_at")
+    private Timestamp nextAttemptAt;
+
+    @Column(name = "synced_date")
+    private Timestamp syncedDate;
 
     @Column(name = "created_by")
     private String createdBy;
