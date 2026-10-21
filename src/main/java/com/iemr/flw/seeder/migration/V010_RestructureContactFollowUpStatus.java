@@ -41,7 +41,10 @@ import java.util.List;
 
 /**
  * Restructures the Contact Follow Up form's "Screening & Referral" section (CFU_SEC_1) per the
- * revised Contact Follow-Up spec:
+ * revised Contact Follow-Up spec. The changes go into a new version 2 (via {@link FormVersionCloner});
+ * version 1 keeps the seeded structure, so responses submitted against it keep their meaning.
+ *
+ * Changes applied to version 2:
  *
  * 1. Soft-removes "Advised to visit health facility" (CFU_ADVISED_VISIT_FACILITY) and "Have you
  *    visited the health facility" (CFU_VISITED_FACILITY) — never hard-deleted, historical responses
@@ -65,7 +68,7 @@ import java.util.List;
  * is record-level logic outside the form definition and is not part of this migration.
  *
  * Every step is idempotent (lookups by uuid/optionValue, ensureX, same-value update; a renamed option
- * no longer matches its old value), so a re-run is a no-op.
+ * no longer matches its old value; version 2 is reused once created), so a re-run is a no-op.
  */
 @Component
 @RequiredArgsConstructor
@@ -90,8 +93,11 @@ public class V010_RestructureContactFollowUpStatus implements FormStructureMigra
             new OptionRename("TPT_ELIGIBLE", "RECOMMEND_FOR_TPT", "Recommend for TPT", "टीपीटी के लिए सिफारिश", 2),
             new OptionRename("FULL_TREATMENT", "RECOMMEND_FOR_ATT", "Recommend for ATT", "एटीटी के लिए सिफारिश", 3));
 
+    private static final int TARGET_VERSION = 2;
+
     private final QuestionOptionRepo optionRepo;
     private final SectionQuestionRepo questionRepo;
+    private final FormVersionCloner versionCloner;
 
     @Override
     public String migrationId() {
@@ -100,9 +106,7 @@ public class V010_RestructureContactFollowUpStatus implements FormStructureMigra
 
     @Override
     public void apply(DynamicFormReconciliationService svc) {
-        FormVersion version = svc.latestVersion(FORM_UUID)
-                .orElseThrow(() -> new IllegalStateException(
-                        FORM_UUID + " not found — must run after ContactFollowUpFormSeeder"));
+        FormVersion version = versionCloner.ensureVersion(svc, FORM_UUID, TARGET_VERSION);
         FormSection section = svc.section(version, SECTION_UUID)
                 .orElseThrow(() -> new IllegalStateException("Section " + SECTION_UUID + " not found"));
 

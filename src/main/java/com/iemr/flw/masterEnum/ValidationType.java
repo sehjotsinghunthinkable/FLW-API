@@ -41,5 +41,10 @@ public enum ValidationType {
     MANDATORY_IF,
     /** Display unit for a numeric answer. validationParam = unit label e.g. "sq. m.".
      *  Informational only — not a rule the answer is checked against. */
-    UNIT
+    UNIT,
+    /** One English helper-text bullet shown under the question. validationParam = the bullet text.
+     *  A question may have several; display them in validationId order. Informational only. */
+    HELPER_TEXT_ENGLISH,
+    /** Hindi counterpart of {@link #HELPER_TEXT_ENGLISH}, one bullet per row, in validationId order. */
+    HELPER_TEXT_HINDI
 }
